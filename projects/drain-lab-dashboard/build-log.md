@@ -19,7 +19,7 @@ sudo dnf install -y tmux git
 - **tmux** keeps terminal sessions running on the server after I disconnect, which matters a lot from an iPhone because iOS drops SSH when Termius goes to the background.
 - **git** tracks changes to the project so I can roll back.
 
-**Step 2 — Installing Claude Code** ⏳ in progress
+**Step 2 — Installed Claude Code** ✅
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 source ~/.bashrc
@@ -27,3 +27,14 @@ claude --version
 ```
 - `curl -fsSL` downloads quietly, follows redirects and fails cleanly on errors. `| bash` runs the downloaded script.
 - `source ~/.bashrc` reloads shell settings so the new `claude` command can be found.
+
+**Troubleshooting:** `claude --version` first returned `bash: claude: command not found`. To tell "not installed" apart from "installed but not on my PATH", I checked the folder the installer uses:
+```bash
+ls ~/.local/bin
+# ls: cannot access '/home/masonbettinger/.local/bin': No such file or directory
+```
+The folder didn't exist, so the installer had never actually run. I re-ran the curl command (pasting it instead of typing it on my phone) and it installed.
+
+**Lesson:** "command not found" doesn't always mean a PATH problem. Check whether the program exists first, then whether the shell can find it.
+
+**Side note for later:** the server showed a firmware notice about a UEFI Secure Boot revocation update (CVE-2026-8863). It's unrelated to this project; I'll look at it separately.

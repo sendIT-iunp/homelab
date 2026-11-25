@@ -14,6 +14,7 @@ Commands I've actually used in my lab, with what they do. Grows as I go.
 |---|---|
 | `source ~/.bashrc` | Reload shell settings without logging out |
 | `echo 'line' >> file` | Append a line to the end of a file (`>` would overwrite it) |
+| `ls <folder>` | List what's in a folder. `~` means my home folder |
 | `cmd1 \| cmd2` | "Pipe": send the output of one command into another |
 | `curl -fsSL <url>` | Download a URL quietly, follow redirects, fail cleanly on errors |
 | `export PATH="$HOME/.local/bin:$PATH"` | Add a folder to the places Linux looks for commands |
