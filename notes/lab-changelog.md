@@ -37,7 +37,7 @@ Re-running `./install.sh` completed. It installed:
 - hooks wired into Claude Code's global settings (`~/.claude/settings.json`), so every Claude Code session on this server now reports to amux and follows its boundary rules
 - systemd **user services**: `amux-server`, `amux-builder.timer`, `amux-worker-start`, plus optional virtual-desktop (Xvfb/VNC) and browser-automation (Playwright) services
 
-**What I turned on, and what I didn't (yet):**
+**Which services to turn on, and which not (yet):**
 
 | Service | Decision | Why |
 |---|---|---|
