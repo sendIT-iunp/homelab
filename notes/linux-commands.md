@@ -31,6 +31,17 @@ Commands I've actually used in my lab, with what they do. Grows as I go.
 | `sudo loginctl enable-linger <user>` | Let a user's services keep running after logout and start at boot |
 | `ss -tlnp` | List programs listening on network ports, and on which address |
 
+## Firewall (firewalld)
+
+| Command | What it does |
+|---|---|
+| `sudo firewall-cmd --get-active-zones` | Which zone each network interface is in |
+| `sudo firewall-cmd --list-all` | What the default zone allows (add `--zone=<name>` for another zone) |
+| `sudo firewall-cmd --permanent --zone=<z> --add-service=<svc>` | Allow a named service (ssh, http, dns…) in a zone |
+| `sudo firewall-cmd --permanent --zone=<z> --add-port=<port>/tcp` | Allow one port in a zone |
+| `sudo firewall-cmd --reload` | Apply the saved (`--permanent`) rules |
+| `cat <file>` | Print a file's contents |
+
 ## tmux (sessions that survive disconnecting)
 
 | Command | What it does |

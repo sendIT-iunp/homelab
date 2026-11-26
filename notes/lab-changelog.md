@@ -2,6 +2,34 @@
 
 Changes to the server that aren't part of a specific project.
 
+## 2026-11-26 — Firewall zone for Tailscale
+
+**Problem:** amux listens on every interface (`0.0.0.0:8824`). I checked what firewalld actually allows:
+```bash
+sudo firewall-cmd --get-active-zones   # enp1s0 (home network) in "public"; tailscale0 in no zone
+sudo firewall-cmd --list-all           # public allows: cockpit dhcpv6-client dns http ssh — no 8824
+```
+So 8824 was blocked from my home network (good), but also from Tailscale. An interface with no zone falls into the default zone, which is `public`.
+
+**Options considered:**
+- Put `tailscale0` in the built-in `trusted` zone: one command, but it opens *every* port to the tailnet, including anything installed later.
+- **Give `tailscale0` its own zone that allows only what I use** ✅ (least privilege)
+
+**Fix:**
+```bash
+sudo firewall-cmd --permanent --new-zone=tailscale
+sudo firewall-cmd --permanent --zone=tailscale --add-interface=tailscale0
+sudo firewall-cmd --permanent --zone=tailscale --add-service=ssh     # Termius over Tailscale
+sudo firewall-cmd --permanent --zone=tailscale --add-service=dns     # Pi-hole DNS
+sudo firewall-cmd --permanent --zone=tailscale --add-service=http    # Pi-hole web admin
+sudo firewall-cmd --permanent --zone=tailscale --add-service=https   # dashboard via tailscale serve (later)
+sudo firewall-cmd --permanent --zone=tailscale --add-port=8824/tcp   # amux
+sudo firewall-cmd --reload
+```
+**Result:** zone `tailscale (active)` on `tailscale0` with `dns http https ssh` and `8824/tcp`. The home network zone is unchanged, so amux stays unreachable from the LAN.
+
+**Concepts:** firewalld groups network interfaces into *zones*, and each zone has its own allow list. `--permanent` saves a rule to disk; `--reload` applies saved rules.
+
 ## 2026-11-26 — Installing amux
 
 [amux](https://github.com/mixpeek/amux) is an open-source "agent multiplexer": it runs several Claude Code sessions inside tmux and gives you a web dashboard and iPhone app to watch and control them.
