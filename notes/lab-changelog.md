@@ -37,7 +37,7 @@ Re-running `./install.sh` completed. It installed:
 - hooks wired into Claude Code's global settings (`~/.claude/settings.json`), so every Claude Code session on this server now reports to amux and follows its boundary rules
 - systemd **user services**: `amux-server`, `amux-builder.timer`, `amux-worker-start`, plus optional virtual-desktop (Xvfb/VNC) and browser-automation (Playwright) services
 
-**Which services to turn on, and which not (yet):**
+**Services turned on, and which are off (for now):**
 
 | Service | Decision | Why |
 |---|---|---|
@@ -46,6 +46,19 @@ Re-running `./install.sh` completed. It installed:
 | `amux-builder.timer` | Off for now | Rebuilds amux on a schedule; I'd rather update deliberately than have code change under running agents |
 | `amux-worker-start` | Off for now | Auto-starts every registered agent at boot; not wanted until the workflow is tested |
 | Xvfb/VNC, Playwright lanes | Off | Not needed yet; a VNC desktop is extra attack surface |
+
+Ran:
+```bash
+sudo loginctl enable-linger masonbettinger
+systemctl --user enable --now amux-server
+systemctl --user status amux-server      # active (running)
+curl -k https://localhost:8824/health     # "status":"ok", tailnet "ok"
+ss -tlnp | grep 8824                      # LISTEN 0.0.0.0:8824
+```
+**Findings:**
+- amux-server is running and healthy, and it can see Tailscale.
+- It listens on `0.0.0.0:8824`, meaning *every* network interface, not just localhost. The auth token protects the dashboard, and Rocky's firewall (firewalld) should block the port from the home network by default. Next: confirm the firewall rules and allow 8824 only over Tailscale.
+- The health check shows the server's Tailscale key expires in about 100 days. For an always-on server, key expiry should be turned off in the Tailscale admin console, or remote access will stop when it lapses.
 
 **Lesson:** installers written mainly for macOS often assume Mac tools exist. "command not found" inside a script usually means one missing package, not a broken install.
 
