@@ -32,6 +32,21 @@ Rust compiled amux's server and CLI in about 42 seconds and installed them to `~
 ```
 `shasum` (a checksum tool) comes with macOS, but on Rocky Linux it lives in the `perl-Digest-SHA` package. Fix: install that package and re-run the installer.
 
+Re-running `./install.sh` completed. It installed:
+- the amux CLI and server in `~/.local/bin`, with data and an auth token in `~/.amux`
+- hooks wired into Claude Code's global settings (`~/.claude/settings.json`), so every Claude Code session on this server now reports to amux and follows its boundary rules
+- systemd **user services**: `amux-server`, `amux-builder.timer`, `amux-worker-start`, plus optional virtual-desktop (Xvfb/VNC) and browser-automation (Playwright) services
+
+**What I turned on, and what I didn't (yet):**
+
+| Service | Decision | Why |
+|---|---|---|
+| Linger (`loginctl enable-linger`) | On | Without it, user services stop when I log out and don't start after a reboot |
+| `amux-server` | On | The dashboard and API |
+| `amux-builder.timer` | Off for now | Rebuilds amux on a schedule; I'd rather update deliberately than have code change under running agents |
+| `amux-worker-start` | Off for now | Auto-starts every registered agent at boot; not wanted until the workflow is tested |
+| Xvfb/VNC, Playwright lanes | Off | Not needed yet; a VNC desktop is extra attack surface |
+
 **Lesson:** installers written mainly for macOS often assume Mac tools exist. "command not found" inside a script usually means one missing package, not a broken install.
 
 **Security notes for this server:**
