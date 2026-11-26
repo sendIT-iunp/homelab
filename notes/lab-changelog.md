@@ -28,6 +28,8 @@ sudo firewall-cmd --reload
 ```
 **Result:** zone `tailscale (active)` on `tailscale0` with `dns http https ssh` and `8824/tcp`. The home network zone is unchanged, so amux stays unreachable from the LAN.
 
+**Phone test:** ✅ The amux iPhone app connected to the server over Tailscale and signed in with the auth token.
+
 **Concepts:** firewalld groups network interfaces into *zones*, and each zone has its own allow list. `--permanent` saves a rule to disk; `--reload` applies saved rules.
 
 ## 2026-11-26 — Installing amux
@@ -97,3 +99,12 @@ ss -tlnp | grep 8824                      # LISTEN 0.0.0.0:8824
 ## 2026-11-25 — Firmware notice
 
 The server showed a notice about a UEFI Secure Boot revocation update (CVE-2026-8863), which blocks old, vulnerable bootloaders. Still to look at: whether to apply it with `fwupdmgr`.
+
+## To do
+
+- [ ] Rotate the amux auth token (it was shared outside the server during setup)
+- [ ] Disable Tailscale key expiry for drainlab (currently ~100 days left)
+- [ ] Turn on MagicDNS + HTTPS certificates in the Tailscale admin console
+- [ ] Vet any Claude Code plugins before installing (source, what hooks/permissions they add), one at a time
+- [ ] Decide on the UEFI Secure Boot firmware update
+
