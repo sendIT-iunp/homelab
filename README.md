@@ -23,6 +23,7 @@ Nothing on the server is exposed to the public internet. Remote access goes only
 ## Notes
 
 - [Linux command cheat sheet](notes/linux-commands.md) — commands I've used, with what they do
+- [Lab changelog](notes/lab-changelog.md) — server changes outside specific projects (tools installed, updates)
 
 ## How this repo is organized
 
