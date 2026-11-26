@@ -52,3 +52,28 @@ Decided to build the dashboard with an amux agent team instead of one agent. I w
 Guardrails: start with two agents, keep permission prompts on, fence agents into the project folder, watch usage limits. amux install notes are in the [lab changelog](../../notes/lab-changelog.md).
 
 **Future project:** a VM sandbox on the mini PC (KVM + Cockpit) where agents can run unattended without any risk to Pi-hole.
+---
+
+## 2026-11-26 — Agent team launched
+
+**Plugins installed** (user scope, so every Claude Code session on the server gets them, including amux workers):
+```bash
+claude plugin marketplace add anthropics/claude-plugins-official
+claude plugin install security-guidance@claude-plugins-official
+claude plugin install frontend-design@claude-plugins-official
+claude plugin install context7@claude-plugins-official
+```
+Small hiccup: one pasted line arrived as `^[[200~claude plugin install …~` and failed with "command not found". Those extra characters are *bracketed paste* markers, which the terminal adds around pasted text; they sometimes leak through. Re-running the line fixed it.
+
+**Project folder:** `~/homelab-dashboard`, with [CLAUDE.md](CLAUDE.md) (team rules) and [BUILD.md](BUILD.md) (spec) downloaded from this repo and committed as the first commit.
+
+**Workers registered:**
+
+| Worker | Model | Permissions | Why |
+|---|---|---|---|
+| `builder` | sonnet | `acceptEdits`: edits files freely, asks before every command | Can build, but can't run anything without me |
+| `reviewer` | sonnet | `default`, with Edit/Write disabled | Can only read, run tests (with approval) and report |
+
+Both are pre-approved for only `amux board` and `amux post`, so they can hand work to each other without me relaying every message. amux can also send email, place calls and post to social media, which is why I didn't pre-approve all `amux` commands.
+
+Started both detached, sent each its role, and the builder began Phase 1 (read-only recon).
