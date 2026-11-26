@@ -102,9 +102,9 @@ The server showed a notice about a UEFI Secure Boot revocation update (CVE-2026-
 
 ## To do
 
-- [ ] Rotate the amux auth token (it was shared outside the server during setup)
+- [ ] Rotate the amux auth token (it was shared outside the server during setup); `amux --help` shows no rotate command, so check amux's docs
 - [ ] Disable Tailscale key expiry for drainlab (currently ~100 days left)
 - [ ] Turn on MagicDNS + HTTPS certificates in the Tailscale admin console
-- [ ] Vet any Claude Code plugins before installing (source, what hooks/permissions they add), one at a time
+- [ ] Install vetted plugins: security-guidance, context7, frontend-design (skipped: superpowers and claude-mem for now, ponytail, impeccable)
 - [ ] Decide on the UEFI Secure Boot firmware update
 

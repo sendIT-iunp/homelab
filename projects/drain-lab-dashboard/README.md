@@ -41,6 +41,14 @@ With a small **team of AI coding agents** coordinated by [amux](https://github.c
 - **Agents are fenced in:** they work only in the project folder, and a shared `CLAUDE.md` forbids touching Pi-hole, SSH, the firewall or system packages.
 - **Usage-aware:** every agent draws from the same Claude plan limits, so parallel runs are kept deliberate.
 
+The agents' shared rules are in [CLAUDE.md](CLAUDE.md) and the spec they build from is [BUILD.md](BUILD.md).
+
+**Claude Code plugins in use** (vetted before installing; I skipped several popular ones that overlapped with amux or each other):
+- `security-guidance` (official Anthropic) — warns about insecure code patterns as they're written
+- `context7` — gives agents current library documentation
+- `frontend-design` (official Anthropic) — for the dashboard UI
+- Karpathy-style coding rules — merged into `CLAUDE.md` instead of installed as a plugin
+
 Originally planned as a single Claude Code agent; switched on 2026-11-26 to learn multi-agent coordination on a real project with a clear finish line.
 
 ## Planned for v2
