@@ -19,7 +19,20 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs
 ```
 That only *downloads and prints* the install script; nothing runs until it's piped into a shell. (Printing a script first is actually a good habit for reading what it does before running it.)
 
-**Fix:** in progress, see below.
+**Fix:**
+```bash
+sudo dnf install -y gcc                                          # C compiler Rust needs for linking
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh   # this time piped into sh, so it runs
+source "$HOME/.cargo/env"                                        # load Rust into the current session
+cd ~/Dev/amux && ./install.sh                                    # re-run the amux installer
+```
+Rust compiled amux's server and CLI in about 42 seconds and installed them to `~/.local/bin`. The installer then failed near the end:
+```
+./install.sh: line 397: shasum: command not found
+```
+`shasum` (a checksum tool) comes with macOS, but on Rocky Linux it lives in the `perl-Digest-SHA` package. Fix: install that package and re-run the installer.
+
+**Lesson:** installers written mainly for macOS often assume Mac tools exist. "command not found" inside a script usually means one missing package, not a broken install.
 
 **Security notes for this server:**
 - amux's quick-start examples use `--yolo`, which skips Claude Code's permission prompts. I'm not using that on this server because it runs my real Pi-hole.

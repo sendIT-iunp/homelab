@@ -37,4 +37,18 @@ The folder didn't exist, so the installer had never actually run. I re-ran the c
 
 **Lesson:** "command not found" doesn't always mean a PATH problem. Check whether the program exists first, then whether the shell can find it.
 
-**Side note for later:** the server showed a firmware notice about a UEFI Secure Boot revocation update (CVE-2026-8863). It's unrelated to this project; I'll look at it separately.
+---
+
+## 2026-11-26 — Switched to a multi-agent build
+
+Decided to build the dashboard with an amux agent team instead of one agent. I weighed three options:
+
+| Option | Why not / why |
+|---|---|
+| Keep one agent, add amux later | Simplest, but doesn't teach multi-agent workflows |
+| **Agent team builds the dashboard** ✅ | Learn coordination on a real project with a finish line, and still ship the dashboard |
+| Drop the dashboard, just learn amux | No clear finish line, and loses the most resume-friendly project |
+
+Guardrails: start with two agents, keep permission prompts on, fence agents into the project folder, watch usage limits. amux install notes are in the [lab changelog](../../notes/lab-changelog.md).
+
+**Future project:** a VM sandbox on the mini PC (KVM + Cockpit) where agents can run unattended without any risk to Pi-hole.

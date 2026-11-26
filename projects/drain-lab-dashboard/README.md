@@ -34,7 +34,14 @@ A read-only dashboard that shows at a glance whether my home lab server and its 
 
 ## How it's being built
 
-I'm building it with **Claude Code** running on the server inside **tmux**, so the work keeps going when I disconnect. I approve sudo commands, passwords and anything destructive myself.
+With a small **team of AI coding agents** coordinated by [amux](https://github.com/mixpeek/amux), running on the server inside tmux. Part of the goal is learning how to design a multi-agent workflow: splitting work between agents, handing off, and reviewing each other's output.
+
+- **Start small:** two agents (a builder and a reviewer/tester), adding more once the handoffs work.
+- **Permission prompts stay on.** No `--yolo` mode on a server that runs my real Pi-hole; I approve requests from my phone.
+- **Agents are fenced in:** they work only in the project folder, and a shared `CLAUDE.md` forbids touching Pi-hole, SSH, the firewall or system packages.
+- **Usage-aware:** every agent draws from the same Claude plan limits, so parallel runs are kept deliberate.
+
+Originally planned as a single Claude Code agent; switched on 2026-11-26 to learn multi-agent coordination on a real project with a clear finish line.
 
 ## Planned for v2
 

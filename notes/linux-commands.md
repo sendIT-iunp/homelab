@@ -8,6 +8,8 @@ Commands I've actually used in my lab, with what they do. Grows as I go.
 |---|---|
 | `sudo dnf install -y <pkg>` | Install a package. `sudo` runs as admin, `-y` auto-confirms |
 
+| `dnf provides <command>` | Find which package contains a missing command |
+
 ## Shell basics
 
 | Command | What it does |
