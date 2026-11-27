@@ -77,3 +77,21 @@ Small hiccup: one pasted line arrived as `^[[200~claude plugin install …~` and
 Both are pre-approved for only `amux board` and `amux post`, so they can hand work to each other without me relaying every message. amux can also send email, place calls and post to social media, which is why I didn't pre-approve all `amux` commands.
 
 Started both detached, sent each its role, and the builder began Phase 1 (read-only recon).
+
+---
+
+## 2026-11-26 (evening) — Phases 1–4 built, and a security fix
+
+The builder got through recon, backend, frontend and the Docker Compose deploy. 29 tests pass.
+
+**Security finding, caught after deploy and fixed:**
+- **Problem:** the docker-socket-proxy setting from the spec (`CONTAINERS=1`) allows more than listing containers. It also allows reading any container's environment variables and downloading files out of any container. The proxy was listening on a localhost port, so any program on the server, running as any user, could have done the same. Once the Pi-hole password goes into `.env`, it would have been readable that way. Writes were already blocked, so nothing could have been changed.
+- **Fix:** the proxy no longer listens on a network port at all. It now uses a private socket file inside a Docker volume that only the proxy and dashboard containers can reach. On the host, that folder is root-only.
+- **Verified:** the port is gone, the Docker card still lists all containers, and stop/restart/delete/exec requests are still refused. All tests pass.
+- **Lesson:** "read-only" in a proxy setting doesn't mean "harmless". Reading a container's environment can mean reading its secrets. Check what an "allow" flag *actually* exposes, not what its name suggests.
+
+**Workflow problems to fix before Phase 5:**
+- The reviewer never got review requests. amux messages only reach workers that share a *group*, and builder and reviewer weren't in one. So phases 1–4 were built without the second-agent review the setup was designed for.
+- The session ended up in **auto mode**, which lets Claude approve its own commands. That goes against the rule for this server, so it's being switched back to manual approvals.
+
+**Next:** put both workers in a group and have the reviewer review phases 1–4; add a Pi-hole *app password* to `.env`; enable HTTPS certificates in Tailscale and run `tailscale serve` for the dashboard.
